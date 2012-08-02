@@ -1,0 +1,9 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<h2>You are authorised!</h2>
+
+<p>The current user is: @User.Identity.Name</p>
+
+<p><a href="@Url.Action("Logout","Account")">Logout</a></p>
