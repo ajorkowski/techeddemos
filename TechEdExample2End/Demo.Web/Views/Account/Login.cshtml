@@ -1,0 +1,18 @@
+﻿@model Demo.Web.Models.LoginModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>You are not authenticated...</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Login</legend>
+
+        <p>
+            <input type="submit" value="Login" />
+        </p>
+    </fieldset>
+}

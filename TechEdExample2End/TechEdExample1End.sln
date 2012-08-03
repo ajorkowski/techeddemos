@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{167E7B06-5233-42C8-BC02-625B01971B54}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+		.nuget\nuget.exe = .nuget\nuget.exe
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "readme", "readme", "{ED3BFE3F-881C-459A-84A5-F12EBF03403C}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Web", "Demo.Web\Demo.Web.csproj", "{72DB59BE-3861-41B9-862E-D93E99AD09C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{72DB59BE-3861-41B9-862E-D93E99AD09C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72DB59BE-3861-41B9-862E-D93E99AD09C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72DB59BE-3861-41B9-862E-D93E99AD09C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72DB59BE-3861-41B9-862E-D93E99AD09C8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
