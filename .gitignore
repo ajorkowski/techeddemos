@@ -4,3 +4,4 @@ packages/
 node_modules/
 _ReSharper.*/
 *.suo
+*.ncrunchsolution*
