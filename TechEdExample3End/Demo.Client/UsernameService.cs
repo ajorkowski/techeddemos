@@ -12,22 +12,27 @@ namespace Demo.Client
         {
             // ADFS Binding
             var adfsBinding = new WS2007HttpBinding(SecurityMode.TransportWithMessageCredential);
+            var adfsMessafe = adfsBinding.Security.Message;
+            adfsMessafe.ClientCredentialType = MessageCredentialType.Windows;
+            adfsMessafe.EstablishSecurityContext = false;
+            adfsMessafe.NegotiateServiceCredential = true;
 
+            // ACS Binding
+            var acsBinding = new WS2007FederationHttpBinding(WSFederationHttpSecurityMode.TransportWithMessageCredential);
+            var acsMessage = acsBinding.Security.Message;
+            acsMessage.IssuedKeyType = SecurityKeyType.BearerKey;
+            acsMessage.IssuerAddress = new EndpointAddress("https://sts.planetsoftware.com.au/adfs/services/trust/13/windowsmixed");
+            acsMessage.IssuerBinding = adfsBinding;
             
             // Service Binding
-            var serviceBinding = new WS2007FederationHttpBinding(WSFederationHttpSecurityMode.TransportWithMessageCredential);
-            var message = serviceBinding.Security.Message;
+            var binding = new WS2007FederationHttpBinding(WSFederationHttpSecurityMode.TransportWithMessageCredential);
+            var message = binding.Security.Message;
             message.IssuedKeyType = SecurityKeyType.BearerKey;
             message.IssuerAddress = new EndpointAddress("https://soniatest.accesscontrol.windows.net/v2/wstrust/13/issuedtoken-bearer");
-            message.IssuerBinding
-
-            // Setup the binding (transport security using windows authentication)
-            var binding = new NetTcpBinding(SecurityMode.Transport);
-            binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
-            binding.Security.Transport.ProtectionLevel = ProtectionLevel.EncryptAndSign;
+            message.IssuerBinding = acsBinding;
 
             // Create the factory to local service
-            var factory = new ChannelFactory<IUserService>(binding, "net.tcp://localhost:808/Demo3/UserService.svc");
+            var factory = new ChannelFactory<IUserService>(binding, "https://felix-home.planetsoftware.local:446/Demo3End/UserService.svc");
 
             factory.Credentials.Windows.ClientCredential = CredentialCache.DefaultNetworkCredentials;
 
