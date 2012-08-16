@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Security.Claims;
+using System.Threading;
 
 namespace Demo.Service
 {
@@ -6,6 +7,7 @@ namespace Demo.Service
     {
         public string GetCurrentUserName()
         {
+            var identity = Thread.CurrentPrincipal.Identity as ClaimsIdentity;
             return Thread.CurrentPrincipal.Identity.Name;
         }
     }
