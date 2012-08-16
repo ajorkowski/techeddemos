@@ -10,7 +10,7 @@ namespace Demo.Client
 {
     public static class UsernameService
     {
-        public static string FindCurrentUserOnServer()
+        public static string FindCurrentUserOnServer(string password)
         {
             // Accept any old certificate... DO NOT DO THIS IN PRODUCTION
             // Used for self-signed localhost certificate
@@ -20,7 +20,7 @@ namespace Demo.Client
             var adfsBinding = new WS2007HttpBinding(SecurityMode.TransportWithMessageCredential);
             adfsBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.None;
             var adfsMessage = adfsBinding.Security.Message;
-            adfsMessage.ClientCredentialType = MessageCredentialType.Windows;
+            adfsMessage.ClientCredentialType = MessageCredentialType.UserName;
             adfsMessage.EstablishSecurityContext = false;
             adfsMessage.NegotiateServiceCredential = true;
 
@@ -29,7 +29,7 @@ namespace Demo.Client
             var acsMessage = acsBinding.Security.Message;
             acsMessage.IssuedKeyType = SecurityKeyType.BearerKey;
             acsMessage.EstablishSecurityContext = false;
-            acsMessage.IssuerAddress = new EndpointAddress("https://sts.planetsoftware.com.au/adfs/services/trust/13/windowsmixed");
+            acsMessage.IssuerAddress = new EndpointAddress("https://sts.planetsoftware.com.au/adfs/services/trust/13/usernamemixed");
             acsMessage.IssuerBinding = adfsBinding;
             
             // Service Binding
@@ -45,7 +45,9 @@ namespace Demo.Client
             // Create the factory to local service
             var factory = new ChannelFactory<IUserService>(binding, "https://localhost:446/Demo3End/UserService.svc");
 
-            factory.Credentials.Windows.ClientCredential = CredentialCache.DefaultNetworkCredentials;
+            //factory.Credentials.Windows.ClientCredential = CredentialCache.DefaultNetworkCredentials;
+            factory.Credentials.UserName.UserName = "felix";
+            factory.Credentials.UserName.Password = password;
 
             var service = factory.CreateChannel();
             var serverUserName = service.GetCurrentUserName();

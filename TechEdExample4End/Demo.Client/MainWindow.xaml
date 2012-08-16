@@ -1,0 +1,11 @@
+﻿<Window x:Class="Demo.Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Logging in application" Height="141" Width="261">
+    <Grid Margin="0,0,3,1">
+        <Button Content="Sign In" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="10,10,0,0" Click="SignIn_Click"/>
+        <Label Content="The Current User Is:" HorizontalAlignment="Left" Margin="10,39,0,0" VerticalAlignment="Top" Height="24" Width="222"/>
+        <Label Name="CurrentUserLabel" Content="" HorizontalAlignment="Left" Margin="10,68,0,0" VerticalAlignment="Top" Height="24" Width="222"/>
+        <PasswordBox Name="Password" HorizontalAlignment="Left" Height="22" Margin="90,10,0,0" VerticalAlignment="Top" Width="142"/>
+    </Grid>
+</Window>

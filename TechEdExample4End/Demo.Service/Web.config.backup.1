@@ -1,0 +1,36 @@
+﻿<?xml version="1.0"?>
+<configuration>
+  <system.web>
+    <compilation debug="true" targetFramework="4.5"/>
+    <pages controlRenderingCompatibilityVersion="4.0"/>
+  </system.web>
+  <system.serviceModel>
+    <protocolMapping>
+      <clear/>
+      <add scheme="net.tcp" binding="netTcpBinding" bindingConfiguration="tcpBinding" />
+    </protocolMapping>
+    <bindings>
+      <netTcpBinding>
+        <binding name="tcpBinding">
+          <security mode="Transport">
+            <transport clientCredentialType="Windows" protectionLevel="EncryptAndSign" />
+          </security>
+        </binding>
+      </netTcpBinding>
+    </bindings>
+    <behaviors>
+      <serviceBehaviors>
+        <behavior>
+          <!-- To avoid disclosing metadata information, set the value below to false before deployment -->
+          <serviceMetadata httpGetEnabled="true"/>
+          <!-- To receive exception details in faults for debugging purposes, set the value below to true.  Set to false before deployment to avoid disclosing exception information -->
+          <serviceDebug includeExceptionDetailInFaults="true"/>
+        </behavior>
+      </serviceBehaviors>
+    </behaviors>
+    <serviceHostingEnvironment multipleSiteBindingsEnabled="true"/>
+  </system.serviceModel>
+  <system.webServer>
+    <modules runAllManagedModulesForAllRequests="true"/>
+  </system.webServer>
+</configuration>
