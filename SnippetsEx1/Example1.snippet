@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>1 - Account View HTML</Title>
+      <Shortcut>example1.1</Shortcut>
+      <Description>Add your providers to your view</Description>
+      <Author>Felix Jorkowski</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="HTML">
+        <![CDATA[<p><a href="@Url.Action("Google")">Log in using Google</a></p>
+<p><a href="@Url.Action("Live")">Log in using Windows Live</a></p>
+<p><a href="@Url.Action("Facebook")">Log in using Facebook</a></p>]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>2 - Helper Method in AccountController</Title>
+      <Shortcut>example1.2</Shortcut>
+      <Description>Helper method to put your DotNetOpenAuth clients into</Description>
+      <Author>Felix Jorkowski</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Imports>
+        <Import>
+          <Namespace>DotNetOpenAuth.AspNet</Namespace>
+        </Import>
+      </Imports>
+      <Code Language="CSharp">
+        <![CDATA[private ActionResult Authenticate(IAuthenticationClient client)
+        {
+            try
+            {
+                var auth = client.VerifyAuthentication(HttpContext);
+                if (auth.IsSuccessful)
+                {
+                    FormsAuthentication.SetAuthCookie(auth.UserName, false);
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            catch (InvalidOperationException)
+            {
+                // If the verification failed we have to redirect
+                client.RequestAuthentication(HttpContext, Request.Url);
+                return null;
+            }
+        }]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>3 - Actions for each provider in AccountController</Title>
+      <Shortcut>example1.3</Shortcut>
+      <Description>Log in actions using the helper</Description>
+      <Author>Felix Jorkowski</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Imports>
+        <Import>
+          <Namespace>DotNetOpenAuth.AspNet.Clients</Namespace>
+        </Import>
+      </Imports>
+      <Code Language="CSharp">
+        <![CDATA[//
+        // GET: /Account/Google
+        public ActionResult Google()
+        {
+            var googleClient = new GoogleOpenIdClient();
+            return Authenticate(googleClient);
+        }
+
+        //
+        // GET: /Account/Live
+        public ActionResult Live()
+        {
+            var liveClient = new MicrosoftClient("appId", "appSecret");
+            return Authenticate(liveClient);
+        }
+
+        // GET: /Accounts/Facebook
+        public ActionResult Facebook()
+        {
+            var facebookClient = new FacebookClient("appId", "appSecret");
+            return Authenticate(facebookClient);
+        }]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
