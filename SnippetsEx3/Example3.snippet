@@ -81,7 +81,7 @@
             <message clientCredentialType="Windows"
                       establishSecurityContext="false"
                       algorithmSuite="Default"
-                      negotiateServiceCredential="true" />
+                      negotiateServiceCredential="false" />
           </security>
         </binding>
       </ws2007HttpBinding>
@@ -114,6 +114,131 @@
         </binding>
       </ws2007FederationHttpBinding>
     </bindings>]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>4 - protocol mapping replacement</Title>
+      <Shortcut>example3.4</Shortcut>
+      <Description>Replace the existing protocalMapping section</Description>
+      <Author>Felix Jorkowski</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="XML">
+        <![CDATA[<protocolMapping>
+      <clear />
+      <add scheme="https" binding="ws2007FederationHttpBinding" bindingConfiguration="serviceBinding" />
+    </protocolMapping>]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>5 - Allow all certificates</Title>
+      <Shortcut>example3.5</Shortcut>
+      <Description>A code section that allows all certificates to be allowed</Description>
+      <Author>Felix Jorkowski</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Imports>
+        <Import>
+          <Namespace>System.Net</Namespace>
+        </Import>
+        <Import>
+          <Namespace>System.Net.Security</Namespace>
+        </Import>
+      </Imports>
+      <Code Language="CSharp">
+        <![CDATA[            // Accept any old certificate (https)... DO NOT DO THIS IN PRODUCTION
+            // Used for self-signed localhost certificate
+            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) => { return true; };]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>6 - Code Bindings</Title>
+      <Shortcut>example3.6</Shortcut>
+      <Description>Put in all of our code bindings in</Description>
+      <Author>Felix Jorkowski</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Imports>
+        <Import>
+          <Namespace>System.IdentityModel.Tokens</Namespace>
+        </Import>
+        <Import>
+          <Namespace>System.ServiceModel</Namespace>
+        </Import>
+        <Import>
+          <Namespace>System.ServiceModel.Security</Namespace>
+        </Import>
+        <Import>
+          <Namespace>System.ServiceModel.Security.Tokens</Namespace>
+        </Import>
+      </Imports>
+      <Code Language="CSharp">
+        <![CDATA[// ADFS Binding
+            var adfsBinding = new WS2007HttpBinding(SecurityMode.TransportWithMessageCredential);
+            adfsBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.None;
+            var adfsMessage = adfsBinding.Security.Message;
+            adfsMessage.ClientCredentialType = MessageCredentialType.Windows;
+            adfsMessage.EstablishSecurityContext = false;
+            adfsMessage.NegotiateServiceCredential = false;
+
+            // ACS Binding
+            var acsBinding = new WS2007FederationHttpBinding(WSFederationHttpSecurityMode.TransportWithMessageCredential);
+            var acsMessage = acsBinding.Security.Message;
+            acsMessage.IssuedKeyType = SecurityKeyType.BearerKey;
+            acsMessage.EstablishSecurityContext = false;
+            acsMessage.IssuerAddress = new EndpointAddress("https://sts.planetsoftware.com.au/adfs/services/trust/13/windowsmixed");
+            acsMessage.IssuerBinding = adfsBinding;
+            
+            // Service Binding
+            var binding = new WS2007FederationHttpBinding(WSFederationHttpSecurityMode.TransportWithMessageCredential);
+            var message = binding.Security.Message;
+            message.IssuedKeyType = SecurityKeyType.BearerKey;
+            message.EstablishSecurityContext = false;
+            message.IssuerMetadataAddress = new EndpointAddress("https://soniatest.accesscontrol.windows.net/v2/wstrust/mex");
+            message.IssuerAddress = new EndpointAddress("https://soniatest.accesscontrol.windows.net/v2/wstrust/13/issuedtoken-bearer");
+            message.IssuerBinding = acsBinding;
+            message.ClaimTypeRequirements.Add(new ClaimTypeRequirement("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", true));]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>7 - Setup the factory</Title>
+      <Shortcut>example3.7</Shortcut>
+      <Description>Setup the factory etc</Description>
+      <Author>Felix Jorkowski</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp">
+        <![CDATA[// Create the factory to local service
+            var factory = new ChannelFactory<IUserService>(binding, "https://localhost:446/Demo3End/UserService.svc");
+
+            factory.Credentials.Windows.ClientCredential = CredentialCache.DefaultNetworkCredentials;
+
+            var service = factory.CreateChannel();
+            var serverUserName = service.GetCurrentUserName();
+
+            factory.Close();
+
+            return serverUserName;]]>
       </Code>
     </Snippet>
   </CodeSnippet>

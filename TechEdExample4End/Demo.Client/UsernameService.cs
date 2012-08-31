@@ -12,7 +12,7 @@ namespace Demo.Client
     {
         public static string FindCurrentUserOnServer(string password)
         {
-            // Accept any old certificate... DO NOT DO THIS IN PRODUCTION
+            // Accept any old certificate (https)... DO NOT DO THIS IN PRODUCTION
             // Used for self-signed localhost certificate
             ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) => { return true; };
 

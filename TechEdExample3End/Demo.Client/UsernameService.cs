@@ -22,7 +22,7 @@ namespace Demo.Client
             var adfsMessage = adfsBinding.Security.Message;
             adfsMessage.ClientCredentialType = MessageCredentialType.Windows;
             adfsMessage.EstablishSecurityContext = false;
-            adfsMessage.NegotiateServiceCredential = true;
+            adfsMessage.NegotiateServiceCredential = false;
 
             // ACS Binding
             var acsBinding = new WS2007FederationHttpBinding(WSFederationHttpSecurityMode.TransportWithMessageCredential);
